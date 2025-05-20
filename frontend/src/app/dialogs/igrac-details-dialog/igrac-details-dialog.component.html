@@ -1,0 +1,67 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+        <h2 mat-dialog-title>Detalji igrača:</h2>
+        <button mat-icon-button class="close-button" (click)="onClose()">
+            <span>×</span>
+        </button>
+    </div>
+    <div class="dialog-content">
+        <div class="details-grid">
+            <div class="detail-item">
+                <div class="detail-label">Ime:</div>
+                <div class="detail-value">{{ data.igrac.ime }}</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Prezime:</div>
+                <div class="detail-value">{{ data.igrac.prezime }}</div>
+            </div>
+            <div class="detail-item" *ngIf="data.igrac.nadimak">
+                <div class="detail-label">Nadimak:</div>
+                <div class="detail-value">{{ data.igrac.nadimak }}</div>
+            </div>
+            <div class="detail-item">
+                <div class="detail-label">Email:</div>
+                <div class="detail-value">{{ data.igrac.email }}</div>
+            </div>
+        </div>
+
+        <div class="statistics-section">
+            <h3 class="section-title">Statistika igrača</h3>
+
+            <div *ngIf="loading" class="loading-container">
+                <mat-spinner diameter="40"></mat-spinner>
+            </div>
+
+            <div *ngIf="error" class="error-message">
+                Došlo je do greške prilikom dohvaćanja statistike.
+            </div>
+
+            <div *ngIf="!loading && !error && statistika" class="statistics-grid">
+                <div class="statistic-item">
+                    <div class="statistic-value">{{ statistika.brojPobjeda }}</div>
+                    <div class="statistic-label">Pobjeda</div>
+                </div>
+                <div class="statistic-item">
+                    <div class="statistic-value">{{ statistika.brojPoraza }}</div>
+                    <div class="statistic-label">Poraza</div>
+                </div>
+                <div class="statistic-item">
+                    <div class="statistic-value">{{ statistika.brojPobjeda + statistika.brojPoraza }}</div>
+                    <div class="statistic-label">Ukupno mečeva</div>
+                </div>
+                <div class="statistic-item">
+                    <div class="statistic-value">{{ getWinRate() }}</div>
+                    <div class="statistic-label">Postotak pobjeda</div>
+                </div>
+            </div>
+
+            <div *ngIf="!loading && !error && statistika && (statistika.brojPobjeda + statistika.brojPoraza === 0)"
+                class="no-data-message">
+                Igrač još nema odigranih mečeva.
+            </div>
+        </div>
+    </div>
+    <div class="dialog-actions">
+        <button mat-raised-button class="btn-primary" (click)="onClose()">Zatvori</button>
+    </div>
+</div>

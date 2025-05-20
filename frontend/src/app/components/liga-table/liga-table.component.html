@@ -1,0 +1,49 @@
+<div class="players-table-container">
+    <div class="table-wrapper">
+        <table class="players-table">
+            <thead>
+                <tr class="table-header">
+                    <th class="table-header-cell">Naziv</th>
+                    <th class="table-header-cell">Status</th>
+                    <th class="table-header-cell">Format</th>
+                    <th class="table-header-cell">Akcije</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let liga of lige" class="table-row" [class.selected-row]="selectedLigaId === liga.id"
+                    (click)="onLigaClick(liga)">
+                    <td class="table-cell">{{ liga.naziv }}</td>
+                    <td class="table-cell">
+                        <span [ngClass]="{
+                            'status-badge': true,
+                            'status-active': liga.status === statusLige.AKTIVNA,
+                            'status-upcoming': liga.status === statusLige.NADOLAZECA,
+                            'status-finished': liga.status === statusLige.ZAVRSENA
+                        }">
+                            {{ getStatusLabel(liga.status) }}
+                        </span>
+                    </td>
+                    <td class="table-cell">{{ liga.format }}</td>
+                    <td class="table-cell actions-cell">
+                        <button mat-button color="primary" class="action-btn details-btn"
+                            (click)="onShowDetails(liga, $event)">
+                            Detalji
+                        </button>
+                        <button mat-button color="accent" class="action-btn edit-btn" (click)="onEdit(liga, $event)">
+                            Uredi
+                        </button>
+                        <button mat-button color="warn" class="action-btn delete-btn"
+                            (click)="onDelete(liga.id, $event)">
+                            Obriši
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="lige.length === 0" class="empty-row">
+                    <td [attr.colspan]="5" class="empty-message">
+                        Nema dostupnih liga
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

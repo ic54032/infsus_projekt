@@ -1,0 +1,44 @@
+<div class="mec-container">
+    <table class="mec-table">
+        <thead class="table-header">
+            <tr>
+                <th class="table-cell">Igrač 1</th>
+                <th class="table-cell">Igrač 2</th>
+                <th class="table-cell">Datum</th>
+                <th class="table-cell">Rezultat</th>
+                <th class="table-cell">Status</th>
+                <th *ngIf="!readOnly" class="table-cell">Akcije</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let mec of mecevi" class="table-row">
+                <td class="table-cell">{{ mec.igrac1Ime }}</td>
+                <td class="table-cell">{{ mec.igrac2Ime }}</td>
+                <td class="table-cell">{{ formatDate(mec.datum) }}</td>
+                <td class="table-cell">{{ mec.rezultat || '-' }}</td>
+                <td class="table-cell">
+                    <span [ngClass]="{
+                    'mec-status-badge': true,
+                    'status-active': mec.status === statusMeca.U_TIJEKU,
+                    'status-upcoming': mec.status === statusMeca.ZAKAZAN,
+                    'status-finished': mec.status === statusMeca.ZAVRSEN,
+                    'status-canceled': mec.status === statusMeca.OTKAZAN
+                  }">
+                        {{ getStatusLabel(mec.status) }}
+                    </span>
+                </td>
+                <td *ngIf="!readOnly" class="table-cell actions-cell">
+                    <button mat-button color="accent" class="action-btn edit-btn" (click)="onEdit(mec, $event)">
+                        Uredi
+                    </button>
+                    <button mat-button class="action-btn delete-btn" (click)="onDelete(mec.id, $event)">
+                        Obriši
+                    </button>
+                </td>
+            </tr>
+            <tr *ngIf="mecevi.length === 0" class="empty-row">
+                <td [attr.colspan]="readOnly ? 5 : 6" class="empty-message">Nema dostupnih mečeva za ovu ligu</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

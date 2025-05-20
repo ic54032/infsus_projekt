@@ -1,0 +1,105 @@
+.players-table-container {
+    margin-bottom: 1.5rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.players-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-header {
+    background-color: #f3f4f6;
+
+    .table-header-cell {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-weight: 500;
+        color: #4b5563;
+        border-bottom: 1px solid #e5e7eb;
+    }
+}
+
+.table-row {
+    transition: background-color 0.15s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #f9fafb;
+    }
+
+    &.selected-row {
+        background-color: #eef2ff;
+        border-left: 3px solid #4f46e5;
+    }
+}
+
+.table-cell {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+.empty-row {
+    .empty-message {
+        padding: 1.5rem;
+        text-align: center;
+        color: #6b7280;
+        font-style: italic;
+    }
+}
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.actions-cell {
+    white-space: nowrap;
+    width: 220px;
+}
+
+.action-btn {
+    min-width: auto;
+    padding: 0 8px;
+    margin-right: 4px;
+
+    &.details-btn {
+        background-color: #2563eb;
+        color: white;
+
+        &:hover {
+            background-color: #1d4ed8;
+        }
+    }
+
+    &.edit-btn {
+        background-color: #2563eb;
+        color: white;
+
+        &:hover {
+            background-color: #1d4ed8;
+        }
+    }
+
+    &.delete-btn {
+        background-color: #ef4444;
+        color: white;
+
+        &:hover {
+            background-color: #dc2626;
+        }
+    }
+}

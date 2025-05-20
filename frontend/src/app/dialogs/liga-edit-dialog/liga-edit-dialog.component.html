@@ -1,0 +1,91 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+        <h2 mat-dialog-title>{{ dialogTitle }}</h2>
+        <button mat-icon-button class="close-button" (click)="onCancel()">
+            <span>×</span>
+        </button>
+    </div>
+
+    <div mat-dialog-content class="dialog-content">
+        <form [formGroup]="ligaForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label required">Naziv lige</label>
+                    <input type="text" class="form-control" formControlName="naziv">
+                    <div *ngIf="ligaForm.get('naziv')?.invalid && ligaForm.get('naziv')?.touched"
+                        class="validation-error">
+                        <div *ngIf="ligaForm.get('naziv')?.errors?.['required']">Naziv lige je obvezan</div>
+                        <div *ngIf="ligaForm.get('naziv')?.errors?.['minlength']">Naziv mora imati najmanje 3 znaka
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Status</label>
+                    <select class="form-control" formControlName="status">
+                        <option value="NADOLAZECA">Nadolazeća</option>
+                        <option value="AKTIVNA">Aktivna</option>
+                        <option value="ZAVRSENA">Završena</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Datum početka</label>
+                    <input type="text" class="form-control" formControlName="datumPocetka" placeholder="dd.MM.yyyy">
+                    <div *ngIf="ligaForm.get('datumPocetka')?.invalid && ligaForm.get('datumPocetka')?.touched"
+                        class="validation-error">
+                        <div *ngIf="ligaForm.get('datumPocetka')?.errors?.['required']">Datum početka je obvezan</div>
+                        <div *ngIf="ligaForm.get('datumPocetka')?.errors?.['pattern']">Nevažeći format datuma (koristite
+                            format: dd.MM.yyyy)</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Datum završetka</label>
+                    <input type="text" class="form-control" formControlName="datumZavrsetka" placeholder="dd.MM.yyyy">
+                    <div *ngIf="ligaForm.get('datumZavrsetka')?.invalid && ligaForm.get('datumZavrsetka')?.touched"
+                        class="validation-error">
+                        <div *ngIf="ligaForm.get('datumZavrsetka')?.errors?.['pattern']">Nevažeći format datuma
+                            (koristite format: dd.MM.yyyy)</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Format</label>
+                    <select class="form-control" formControlName="format">
+                        <option value="Round Robin">Round Robin</option>
+                        <option value="Eliminacija">Eliminacija</option>
+                        <option value="Grupna faza + Eliminacija">Grupna faza + Eliminacija</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Max igraca</label>
+                    <input type="number" class="form-control" formControlName="maxIgraca">
+                    <div *ngIf="ligaForm.get('maxIgraca')?.invalid && ligaForm.get('maxIgraca')?.touched"
+                        class="validation-error">
+                        <div *ngIf="ligaForm.get('maxIgraca')?.errors?.['required']">Max igraca je obvezan</div>
+                        <div *ngIf="ligaForm.get('maxIgraca')?.errors?.['min']">Max igraca mora biti veći od 0</div>
+                        <div *ngIf="ligaForm.get('maxIgraca')?.errors?.['max']">Max igraca ne može biti veći od 100
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="mecevi-section">
+            <div class="section-header-with-button">
+                <h4 class="subsection-header">Mečevi u ligi</h4>
+                <button mat-raised-button class="btn-primary" (click)=" openAddMecDialog()">Novi meč</button>
+            </div>
+            <app-mec-table [mecevi]="mecevi" [readOnly]="false" (editMec)="editMec($event)"
+                (deleteMec)="deleteMec($event)">
+            </app-mec-table>
+        </div>
+    </div>
+
+    <div mat-dialog-actions class="dialog-actions">
+        <button mat-button class="cancel-button" (click)="onCancel()">Odustani</button>
+        <button mat-raised-button class="save-button" (click)="onSave()">Spremi</button>
+    </div>
+</div>

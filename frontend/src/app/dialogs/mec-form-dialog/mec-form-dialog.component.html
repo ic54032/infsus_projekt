@@ -1,0 +1,84 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+        <h2 mat-dialog-title>{{ dialogTitle }}</h2>
+        <button mat-icon-button class="close-button" (click)="onCancel()">
+            <span>×</span>
+        </button>
+    </div>
+
+    <div mat-dialog-content class="dialog-content">
+        <form [formGroup]="mecForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label required">Igrač 1</label>
+                    <select class="form-control" formControlName="igrac1Id">
+                        <option [value]="null" disabled>Odaberite igrača</option>
+                        <option *ngFor="let igrac of igraci" [value]="igrac.id">
+                            {{ igrac.ime }} {{ igrac.prezime }}
+                        </option>
+                    </select>
+                    <div *ngIf="mecForm.get('igrac1Id')?.invalid && mecForm.get('igrac1Id')?.touched"
+                        class="validation-error">
+                        <div *ngIf="mecForm.get('igrac1Id')?.errors?.['required']">Igrač 1 je obvezan</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Igrač 2</label>
+                    <select class="form-control" formControlName="igrac2Id">
+                        <option [value]="null" disabled>Odaberite igrača</option>
+                        <option *ngFor="let igrac of igraci" [value]="igrac.id">
+                            {{ igrac.ime }} {{ igrac.prezime }}
+                        </option>
+                    </select>
+                    <div *ngIf="mecForm.get('igrac2Id')?.invalid && mecForm.get('igrac2Id')?.touched"
+                        class="validation-error">
+                        <div *ngIf="mecForm.get('igrac2Id')?.errors?.['required']">Igrač 2 je obvezan</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Datum</label>
+                    <input type="text" class="form-control" formControlName="datum" placeholder="dd.MM.yyyy">
+                    <div *ngIf="mecForm.get('datum')?.invalid && mecForm.get('datum')?.touched"
+                        class="validation-error">
+                        <div *ngIf="mecForm.get('datum')?.errors?.['required']">Datum je obvezan</div>
+                        <div *ngIf="mecForm.get('datum')?.errors?.['pattern']">Nevažeći format datuma (koristite format:
+                            dd.MM.yyyy)</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Status</label>
+                    <select class="form-control" formControlName="status">
+                        <option value="ZAKAZAN">Zakazan</option>
+                        <option value="U_TIJEKU">U tijeku</option>
+                        <option value="ZAVRSEN">Završen</option>
+                        <option value="OTKAZAN">Otkazan</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Rezultat</label>
+                    <input type="text" class="form-control" formControlName="rezultat" placeholder="npr. 3:2">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Vrijeme</label>
+                    <input type="text" class="form-control" formControlName="vrijeme" placeholder="Format: HH:MM">
+                    <div *ngIf="mecForm.get('vrijeme')?.invalid && mecForm.get('vrijeme')?.touched"
+                        class="validation-error">
+                        <div *ngIf="mecForm.get('vrijeme')?.errors?.['required']">Vrijeme je obvezno</div>
+                        <div *ngIf="mecForm.get('vrijeme')?.errors?.['pattern']">Nevažeći format vremena (koristite
+                            format: HH:MM)</div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div mat-dialog-actions class="dialog-actions">
+        <button mat-button class="cancel-button" (click)="onCancel()">Odustani</button>
+        <button mat-raised-button color="primary" class="save-button" (click)="onSave()">Spremi</button>
+    </div>
+</div>

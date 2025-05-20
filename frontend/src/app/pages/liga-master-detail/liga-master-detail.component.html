@@ -1,0 +1,29 @@
+<div class="page-container">
+    <h1 class="page-title">Pregled i upravljanje ligama</h1>
+
+    <!-- Header with details -->
+    <app-header title="Administracija liga"></app-header>
+
+    <!-- Actions toolbar -->
+    <div class="action-toolbar">
+        <button mat-raised-button class="btn-primary" (click)="openNewLigaDialog()">Nova liga</button>
+        <app-search placeholder="Pretražite lige..." (searchChange)="pretraga = $event; filterLige()">
+        </app-search>
+    </div>
+
+    <div *ngIf="loading" class="loading-indicator">
+        Učitavanje...
+    </div>
+
+    <div *ngIf="error" class="error-message">
+        {{ error }}
+    </div>
+
+    <!-- Master view - list of leagues -->
+    <div *ngIf="!loading && !error" class="content-container">
+        <app-liga-table [lige]="filtriranaLista" [selectedLigaId]="odabranaLiga?.id"
+            (showDetails)="showLigaDetails($event)" (editLiga)="editLiga($event)"
+            (deleteLiga)="handleDeleteLiga($event)">
+        </app-liga-table>
+    </div>
+</div>

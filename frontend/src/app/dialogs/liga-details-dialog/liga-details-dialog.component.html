@@ -1,0 +1,59 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+        <h2 mat-dialog-title>Detalji lige</h2>
+        <button mat-icon-button class="close-button" [mat-dialog-close]="undefined">
+            <span>×</span>
+        </button>
+    </div>
+
+    <div mat-dialog-content class="dialog-content">
+        <div class="liga-details">
+            <div class="detail-group">
+                <div class="detail-label">Naziv lige:</div>
+                <div class="detail-value">{{ data.liga.naziv }}</div>
+            </div>
+
+            <div class="detail-group">
+                <div class="detail-label">Status:</div>
+                <div class="detail-value">
+                    <span [ngClass]="{
+                            'status-badge': true,
+                            'status-active': data.liga.status === statusLige.AKTIVNA,
+                            'status-upcoming': data.liga.status === statusLige.NADOLAZECA,
+                            'status-finished': data.liga.status === statusLige.ZAVRSENA
+                        }">
+                        {{ getStatusLabel(data.liga.status) }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="detail-group">
+                <div class="detail-label">Datum početka:</div>
+                <div class="detail-value">{{ formatDate(data.liga.datumPocetka) }}</div>
+            </div>
+
+            <div class="detail-group">
+                <div class="detail-label">Datum završetka:</div>
+                <div class="detail-value">
+                    {{ data.liga.datumZavrsetka ? formatDate(data.liga.datumZavrsetka) : 'Nije definiran' }}
+                </div>
+            </div>
+
+            <div class="detail-group">
+                <div class="detail-label">Format:</div>
+                <div class="detail-value">{{ data.liga.format }}</div>
+            </div>
+
+            <div class="detail-group">
+                <div class="detail-label">Max igraca:</div>
+                <div class="detail-value">{{ data.liga.max_igraca }}</div>
+            </div>
+        </div>
+
+        <app-mec-table [mecevi]="data.mecevi" [readOnly]="true"></app-mec-table>
+    </div>
+
+    <div mat-dialog-actions class="dialog-actions">
+        <button mat-raised-button color="primary" [mat-dialog-close]="undefined">Zatvori</button>
+    </div>
+</div>

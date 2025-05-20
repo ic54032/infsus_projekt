@@ -1,0 +1,28 @@
+<div class="page-container">
+    <h1 class="page-title">Šifrarnik igrača</h1>
+
+    <app-header title="Administracija igrača"></app-header>
+
+    <div class="navigation-bar">
+        <div class="nav-container">
+            <div class="nav-buttons">
+                <button class="nav-button btn-primary" mat-raised-button color="primary"
+                    (click)="openNewPlayerDialog()">
+                    Novi igrač
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <app-search placeholder="Pretražite igrače..." (searchChange)="pretraga = $event; filtrirajIgrace()">
+    </app-search>
+
+    <div *ngIf="loading" class="loading-indicator">
+        Učitavanje podataka...
+    </div>
+    <div *ngIf="!loading" class="full-width-container">
+        <app-igraci-table [igraci]="filtriraniIgraci" (showDetails)="showPlayerDetails($event)"
+            (editIgrac)="editPlayerDialog($event)" (deleteIgrac)="handleDelete($event)">
+        </app-igraci-table>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="dialog-container">
+    <div class="dialog-header">
+        <h2 mat-dialog-title>{{ dialogTitle }}</h2>
+        <button mat-icon-button class="close-button" (click)="onDialogClose()">
+            <span>×</span>
+        </button>
+    </div>
+
+    <div mat-dialog-content class="dialog-content">
+        <form [formGroup]="igracForm" (ngSubmit)="onSave()">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label required">Ime</label>
+                    <input type="text" class="form-control" formControlName="ime">
+                    <div *ngIf="igracForm.get('ime')?.invalid && igracForm.get('ime')?.touched"
+                        class="validation-error">
+                        <div *ngIf="igracForm.get('ime')?.errors?.['required']">Ime je obvezno</div>
+                        <div *ngIf="igracForm.get('ime')?.errors?.['minlength']">Ime mora imati najmanje 2 znaka</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Prezime</label>
+                    <input type="text" class="form-control" formControlName="prezime">
+                    <div *ngIf="igracForm.get('prezime')?.invalid && igracForm.get('prezime')?.touched"
+                        class="validation-error">
+                        <div *ngIf="igracForm.get('prezime')?.errors?.['required']">Prezime je obvezno</div>
+                        <div *ngIf="igracForm.get('prezime')?.errors?.['minlength']">Prezime mora imati najmanje 2 znaka
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Nadimak</label>
+                    <input type="text" class="form-control" formControlName="nadimak">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label required">Email</label>
+                    <input type="email" class="form-control" formControlName="email">
+                    <div *ngIf="igracForm.get('email')?.invalid && igracForm.get('email')?.touched"
+                        class="validation-error">
+                        <div *ngIf="igracForm.get('email')?.errors?.['required']">Email je obvezan</div>
+                        <div *ngIf="igracForm.get('email')?.errors?.['pattern']">Unesite ispravnu email adresu</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" mat-button class="cancel-button" (click)="onCancel()">Odustani</button>
+                <button type="submit" mat-raised-button class="save-button">Spremi</button>
+            </div>
+        </form>
+    </div>
+</div>
