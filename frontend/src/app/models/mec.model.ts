@@ -7,18 +7,6 @@ export interface Mec {
     vrijeme: string;
     rezultat?: string;
     status: string;
-    napomena?: string;
     igrac1Ime?: string;
     igrac2Ime?: string;
-}
-
-export interface MecViewModel {
-    id?: number;
-    ligaId?: number;
-    ligaNaziv?: string;
-    igrac1: string;
-    igrac2: string;
-    datum: string;
-    rezultat: string;
-    status: string;
 }

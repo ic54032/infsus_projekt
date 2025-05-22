@@ -4,11 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { Liga } from '../../models/liga.model';
-import { MecViewModel } from '../../models/mec.model';
 import { LigaService } from '../../services/liga.service';
 import { MecService } from '../../services/mec.service';
-import { StatusLige, StatusLigeLabels } from '../../models/status-lige.enum';
-import { StatusMeca, StatusMecaLabels } from '../../models/status-meca.enum';
+import { StatusLigeLabels } from '../../models/status-lige.enum';
+import { StatusMecaLabels } from '../../models/status-meca.enum';
 import { DatePipe } from '@angular/common';
 import { HeaderComponent } from '../../components/header/header.component';
 import { SearchComponent } from '../../components/search/search.component';
@@ -40,9 +39,8 @@ export class LigaMasterDetailComponent implements OnInit {
     loading = true;
     error = '';
     pretraga = '';
-    today = new Date(); // Today's date for the header
+    today = new Date();
 
-    // Expose enum as property for template usage
     statusLabels = StatusLigeLabels;
     mecStatusLabels = StatusMecaLabels;
 
