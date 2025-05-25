@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { Liga } from '../../models/liga.model';
@@ -56,16 +56,109 @@ export class LigaEditDialogComponent implements OnInit {
             status: [this.data.liga?.status || 'NADOLAZECA', Validators.required],
             datumPocetka: [
                 formattedStartDate || this.getFormattedToday(),
-                [Validators.required, Validators.pattern(datePattern)]
+                [Validators.required, Validators.pattern(datePattern), this.futureDateValidator.bind(this)]
             ],
             datumZavrsetka: [
                 formattedEndDate,
-                Validators.pattern(datePattern)
+                [Validators.pattern(datePattern), this.endDateValidator.bind(this)]
             ],
             format: [this.data.liga?.format || 'Round Robin', Validators.required],
-            maxIgraca: [this.data.liga?.max_igraca || 16, [Validators.required, Validators.min(2)]],
+            maxIgraca: [this.data.liga?.max_igraca || 16, [Validators.required, Validators.min(1), Validators.max(100)]]
         });
+
+        // Subscribe to date changes to update available statuses
+        this.ligaForm.get('datumZavrsetka')?.valueChanges.subscribe(() => {
+            this.updateAvailableStatuses();
+        });
+
+        this.ligaForm.get('datumPocetka')?.valueChanges.subscribe(() => {
+            this.updateAvailableStatuses();
+        });
+
+        // Initial status update
+        this.updateAvailableStatuses();
     }
+
+    // Custom validator for future dates
+    futureDateValidator(control: AbstractControl): ValidationErrors | null {
+        if (!control.value) return null;
+
+        const dateRegex = /^\d{2}\.\d{2}\.\d{4}$/;
+        if (!dateRegex.test(control.value)) return null;
+
+        const parts = control.value.split('.');
+        const inputDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        if (inputDate < today) {
+            return { pastDate: true };
+        }
+
+        return null;
+    }
+
+    // Custom validator for end date
+    endDateValidator(control: AbstractControl): ValidationErrors | null {
+        if (!control.value) return null;
+
+        const dateRegex = /^\d{2}\.\d{2}\.\d{4}$/;
+        if (!dateRegex.test(control.value)) return null;
+
+        const startDateControl = this.ligaForm?.get('datumPocetka');
+        if (!startDateControl?.value) return null;
+
+        const startParts = startDateControl.value.split('.');
+        const endParts = control.value.split('.');
+
+        const startDate = new Date(`${startParts[2]}-${startParts[1]}-${startParts[0]}`);
+        const endDate = new Date(`${endParts[2]}-${endParts[1]}-${endParts[0]}`);
+
+        if (endDate <= startDate) {
+            return { endDateBeforeStart: true };
+        }
+
+        return null;
+    }
+
+    // Update available statuses based on dates
+    updateAvailableStatuses(): void {
+        const endDateControl = this.ligaForm?.get('datumZavrsetka');
+        const statusControl = this.ligaForm?.get('status');
+
+        if (!endDateControl || !statusControl) return;
+
+        const currentStatus = statusControl.value;
+        const endDateValue = endDateControl.value;
+
+        if (endDateValue) {
+            const dateRegex = /^\d{2}\.\d{2}\.\d{4}$/;
+            if (dateRegex.test(endDateValue)) {
+                const parts = endDateValue.split('.');
+                const endDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+                const today = new Date();
+                today.setHours(23, 59, 59, 999);
+
+                // If end date is in the past or today, allow ZAVRSENA status
+                if (endDate <= today) {
+                    this.canSetZavrsena = true;
+                } else {
+                    this.canSetZavrsena = false;
+                    // If currently set to ZAVRSENA but end date is in future, change to AKTIVNA
+                    if (currentStatus === 'ZAVRSENA') {
+                        statusControl.setValue('AKTIVNA');
+                    }
+                }
+            }
+        } else {
+            this.canSetZavrsena = false;
+            if (currentStatus === 'ZAVRSENA') {
+                statusControl.setValue('AKTIVNA');
+            }
+        }
+    }
+
+    canSetZavrsena = false;
 
     formatDateForDisplay(dateString: string): string {
         if (!dateString) return '';

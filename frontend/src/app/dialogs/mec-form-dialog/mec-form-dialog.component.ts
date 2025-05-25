@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { Mec } from '../../models/mec.model';
@@ -82,7 +82,72 @@ export class MecFormDialogComponent implements OnInit {
       rezultat: [this.data.mec?.rezultat || ''],
       status: [this.data.mec?.status || 'ZAKAZAN', Validators.required],
     });
+
+    // Subscribe to date changes to update available statuses
+    this.mecForm.get('datum')?.valueChanges.subscribe(() => {
+      this.updateAvailableStatuses();
+    });
+
+    // Initial status update
+    this.updateAvailableStatuses();
   }
+
+  dateValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) return null;
+
+    const dateRegex = /^\d{2}\.\d{2}\.\d{4}$/;
+    if (!dateRegex.test(control.value)) return null;
+
+    const parts = control.value.split('.');
+    const inputDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (inputDate < today) {
+      return { pastDate: true };
+    }
+
+    return null;
+  }
+
+  // Update available statuses based on match date
+  updateAvailableStatuses(): void {
+    const datumControl = this.mecForm?.get('datum');
+    const statusControl = this.mecForm?.get('status');
+
+    if (!datumControl || !statusControl) return;
+
+    const currentStatus = statusControl.value;
+    const datumValue = datumControl.value;
+
+    if (datumValue) {
+      const dateRegex = /^\d{2}\.\d{2}\.\d{4}$/;
+      if (dateRegex.test(datumValue)) {
+        const parts = datumValue.split('.');
+        const mecDate = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+        const today = new Date();
+        today.setHours(23, 59, 59, 999);
+
+        // If match date is in the past or today, allow ZAVRSEN status
+        if (mecDate <= today) {
+          this.canSetZavrsen = true;
+        } else {
+          this.canSetZavrsen = false;
+          // If currently set to ZAVRSEN but date is in future, change to ZAKAZAN
+          if (currentStatus === 'ZAVRSEN') {
+            statusControl.setValue('ZAKAZAN');
+          }
+        }
+      }
+    } else {
+      this.canSetZavrsen = false;
+      if (currentStatus === 'ZAVRSEN') {
+        statusControl.setValue('ZAKAZAN');
+      }
+    }
+  }
+
+  canSetZavrsen = false;
 
   formatDateForDisplay(dateString?: string): string {
     if (!dateString) return this.getFormattedToday();

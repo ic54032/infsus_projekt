@@ -25,8 +25,12 @@
                     <select class="form-control" formControlName="status">
                         <option value="NADOLAZECA">Nadolazeća</option>
                         <option value="AKTIVNA">Aktivna</option>
-                        <option value="ZAVRSENA">Završena</option>
+                        <option value="ZAVRSENA" [disabled]="!canSetZavrsena">Završena</option>
                     </select>
+                    <div *ngIf="!canSetZavrsena && ligaForm.get('status')?.value === 'ZAVRSENA'"
+                        class="validation-info">
+                        Status "Završena" je dostupan samo ako je datum završetka u prošlosti ili danas
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -37,6 +41,8 @@
                         <div *ngIf="ligaForm.get('datumPocetka')?.errors?.['required']">Datum početka je obvezan</div>
                         <div *ngIf="ligaForm.get('datumPocetka')?.errors?.['pattern']">Nevažeći format datuma (koristite
                             format: dd.MM.yyyy)</div>
+                        <div *ngIf="ligaForm.get('datumPocetka')?.errors?.['pastDate']">Datum početka ne može biti u
+                            prošlosti</div>
                     </div>
                 </div>
 
@@ -47,9 +53,12 @@
                         class="validation-error">
                         <div *ngIf="ligaForm.get('datumZavrsetka')?.errors?.['pattern']">Nevažeći format datuma
                             (koristite format: dd.MM.yyyy)</div>
+                        <div *ngIf="ligaForm.get('datumZavrsetka')?.errors?.['endDateBeforeStart']">Datum završetka mora
+                            biti nakon datuma početka</div>
                     </div>
                 </div>
 
+                <!-- ...rest of the form remains the same... -->
                 <div class="form-group">
                     <label class="form-label required">Format</label>
                     <select class="form-control" formControlName="format">
@@ -73,10 +82,11 @@
             </div>
         </form>
 
+        <!-- ...rest of the template remains the same... -->
         <div class="mecevi-section">
             <div class="section-header-with-button">
                 <h4 class="subsection-header">Mečevi u ligi</h4>
-                <button mat-raised-button class="btn-primary" (click)=" openAddMecDialog()">Novi meč</button>
+                <button mat-raised-button class="btn-primary" (click)="openAddMecDialog()">Novi meč</button>
             </div>
             <app-mec-table [mecevi]="mecevi" [readOnly]="false" (editMec)="editMec($event)"
                 (deleteMec)="deleteMec($event)">
@@ -86,6 +96,6 @@
 
     <div mat-dialog-actions class="dialog-actions">
         <button mat-button class="cancel-button" (click)="onCancel()">Odustani</button>
-        <button mat-raised-button class="save-button" (click)="onSave()">Spremi</button>
+        <button mat-raised-button class="save-button" (click)="onSave()" [disabled]="ligaForm.invalid">Spremi</button>
     </div>
 </div>

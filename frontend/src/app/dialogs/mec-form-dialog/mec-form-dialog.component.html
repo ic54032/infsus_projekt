@@ -45,6 +45,8 @@
                         <div *ngIf="mecForm.get('datum')?.errors?.['required']">Datum je obvezan</div>
                         <div *ngIf="mecForm.get('datum')?.errors?.['pattern']">Nevažeći format datuma (koristite format:
                             dd.MM.yyyy)</div>
+                        <div *ngIf="mecForm.get('datum')?.errors?.['pastDate']">Datum meča ne može biti u prošlosti
+                        </div>
                     </div>
                 </div>
 
@@ -53,9 +55,12 @@
                     <select class="form-control" formControlName="status">
                         <option value="ZAKAZAN">Zakazan</option>
                         <option value="U_TIJEKU">U tijeku</option>
-                        <option value="ZAVRSEN">Završen</option>
+                        <option value="ZAVRSEN" [disabled]="!canSetZavrsen">Završen</option>
                         <option value="OTKAZAN">Otkazan</option>
                     </select>
+                    <div *ngIf="!canSetZavrsen && mecForm.get('status')?.value === 'ZAVRSEN'" class="validation-info">
+                        Status "Završen" je dostupan samo ako je datum meča u prošlosti ili danas
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -79,6 +84,7 @@
 
     <div mat-dialog-actions class="dialog-actions">
         <button mat-button class="cancel-button" (click)="onCancel()">Odustani</button>
-        <button mat-raised-button color="primary" class="save-button" (click)="onSave()">Spremi</button>
+        <button mat-raised-button color="primary" class="save-button" (click)="onSave()"
+            [disabled]="mecForm.invalid">Spremi</button>
     </div>
 </div>

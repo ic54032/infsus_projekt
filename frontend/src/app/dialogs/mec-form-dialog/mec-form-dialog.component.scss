@@ -91,3 +91,20 @@ textarea.form-control {
 .cancel-button {
     min-width: 100px;
 }
+
+.validation-info {
+    color: #1976d2;
+    font-size: 0.875rem;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+.validation-error {
+    color: #f44336;
+    font-size: 0.875rem;
+    margin-top: 4px;
+}
+
+select:disabled option {
+    color: #999;
+}
