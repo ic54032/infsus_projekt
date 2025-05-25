@@ -20,7 +20,6 @@ export class LigaTableComponent {
     @Output() showDetails = new EventEmitter<Liga>();
     @Output() editLiga = new EventEmitter<Liga>();
     @Output() deleteLiga = new EventEmitter<number>();
-    // Expose enum as property for template usage
     statusLige = StatusLige;
 
     constructor(private datePipe: DatePipe) { }

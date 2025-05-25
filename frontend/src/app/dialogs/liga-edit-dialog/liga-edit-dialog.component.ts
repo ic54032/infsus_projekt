@@ -105,7 +105,14 @@ export class LigaEditDialogComponent implements OnInit {
                 if (!result.data.id) {
                     result.data.id = -Math.floor(Math.random() * 1000);
                 }
-                this.mecevi.push(result.backendData || result.data);
+
+                const newMec = {
+                    ...result.data,
+                    igrac1Ime: result.data.igrac1Ime,
+                    igrac2Ime: result.data.igrac2Ime
+                };
+
+                this.mecevi.push(newMec);
             }
         });
     }
@@ -119,10 +126,14 @@ export class LigaEditDialogComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result && result.action === 'save') {
-                // Use the proper backend-formatted data
-                const updatedData = result.backendData || result.data;
+                const updatedMec = {
+                    ...result.data,
+                    igrac1Ime: result.data.igrac1Ime,
+                    igrac2Ime: result.data.igrac2Ime
+                };
+
                 this.mecevi = this.mecevi.map(m =>
-                    m.id === updatedData.id ? updatedData : m
+                    m.id === updatedMec.id ? updatedMec : m
                 );
             }
         });

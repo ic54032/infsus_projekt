@@ -131,8 +131,8 @@ export class MecFormDialogComponent implements OnInit {
       }
     }
 
-    const igrac1 = this.igraci.find(i => i.id === formValue.igrac1Id);
-    const igrac2 = this.igraci.find(i => i.id === formValue.igrac2Id);
+    const igrac1 = this.igraci.find(i => i.id === Number(formValue.igrac1Id));
+    const igrac2 = this.igraci.find(i => i.id === Number(formValue.igrac2Id));
 
     const mecBackendDTO: MecFormData = {
       id: formValue.id,

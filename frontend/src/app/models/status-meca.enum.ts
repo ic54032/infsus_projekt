@@ -5,7 +5,6 @@ export enum StatusMeca {
     OTKAZAN = 'OTKAZAN'
 }
 
-// For displaying in the UI
 export const StatusMecaLabels = {
     [StatusMeca.ZAKAZAN]: 'Zakazan',
     [StatusMeca.U_TIJEKU]: 'U tijeku',
