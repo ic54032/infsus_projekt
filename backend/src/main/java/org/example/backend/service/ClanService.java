@@ -6,7 +6,6 @@ import org.example.backend.dto.ClanDTO;
 import org.example.backend.dto.MecDTO;
 import org.example.backend.dto.StatistikaDTO;
 import org.example.backend.model.Clan;
-import org.example.backend.model.Mec;
 import org.example.backend.repository.ClanRepository;
 import org.example.backend.repository.MecRepository;
 import org.springframework.dao.DuplicateKeyException;
@@ -28,8 +27,7 @@ public class ClanService {
     }
 
     public Clan dohvatiClanaPremId(Long id) {
-        return clanRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Član s ID-om " + id + " nije pronađen"));
+        return clanRepository.findById(id).orElse(null);
     }
 
     public Clan dohvatiClanaPremEmail(String email) {
@@ -58,7 +56,6 @@ public class ClanService {
         clan.setPrezime(clanDetalji.getPrezime());
         clan.setNadimak(clanDetalji.getNadimak());
 
-        // Email promjena zahtijeva dodatnu validaciju
         if (!clan.getEmail().equals(clanDetalji.getEmail())) {
             if (clanRepository.existsByEmail(clanDetalji.getEmail())) {
                 throw new DuplicateKeyException("Email " + clanDetalji.getEmail() + " već postoji");

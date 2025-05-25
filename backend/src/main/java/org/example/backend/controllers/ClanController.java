@@ -5,6 +5,7 @@ import org.example.backend.dto.ClanDTO;
 import org.example.backend.dto.StatistikaDTO;
 import org.example.backend.model.*;
 import org.example.backend.service.ClanService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,9 @@ public class ClanController {
     @GetMapping("/{id}")
     public ResponseEntity<ClanDTO> dohvatiClanaPremId(@PathVariable Long id) {
         Clan clan = clanService.dohvatiClanaPremId(id);
+        if (clan == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(convertToDto(clan));
     }
 
@@ -42,12 +46,15 @@ public class ClanController {
     @PostMapping("/create")
     public ResponseEntity<ClanDTO> kreirajClana(@RequestBody ClanDTO clanDTO) {
         Clan noviClan = clanService.kreirajClana(clanDTO);
-        return ResponseEntity.ok(convertToDto(noviClan));
+        return ResponseEntity.status(HttpStatus.CREATED).body(convertToDto(noviClan));
     }
 
     @PostMapping("/update/{id}")
     public ResponseEntity<ClanDTO> azurirajClana(@PathVariable Long id, @RequestBody ClanDTO clanDetalji) {
         Clan azuriraniClan = clanService.azurirajClana(id, clanDetalji);
+        if (azuriraniClan == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(convertToDto(azuriraniClan));
     }
 

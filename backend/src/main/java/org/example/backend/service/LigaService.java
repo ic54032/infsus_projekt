@@ -1,5 +1,6 @@
 package org.example.backend.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.backend.dto.LigaDTO;
 import org.example.backend.model.*;
@@ -25,9 +26,15 @@ public class LigaService {
          return ligaRepository.findAll();
      }
 
-     public List<Mec> dohvatiSveMecevePremLiga(String nazivLiga) {
-         return mecRepository.findByLigaNaziv(nazivLiga);
-     }
+    public List<Mec> dohvatiSveMecevePremLiga(String nazivLiga) {
+        // First find the liga by name
+        Liga liga = ligaRepository.findByNaziv(nazivLiga);
+        if (liga == null) {
+            throw new EntityNotFoundException("Liga s nazivom " + nazivLiga + " nije pronađena");
+        }
+        // Then find mecevi by liga naziv
+        return mecRepository.findByLigaNaziv(liga.getNaziv());
+    }
 
      public Liga kreirajLigu(LigaDTO ligaDTO) {
          if (ligaRepository.existsByNaziv(ligaDTO.getNaziv())) {
@@ -58,10 +65,10 @@ public class LigaService {
         }
 
         public void obrisiLigu(Long id) {
-            if (!ligaRepository.existsById(id)) {
-                throw new DuplicateKeyException("Liga s ID-om " + id + " nije pronađena");
-            }
-            ligaRepository.deleteById(id);
+            Liga liga = ligaRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Liga s ID-om " + id + " nije pronađena"));
+
+            ligaRepository.delete(liga);
         }
 
 
